@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - local-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=challengePass
+      - POSTGRES_USER=challengeUser
+      - POSTGRES_DB=challenge
+
+volumes:
+  local-data:
