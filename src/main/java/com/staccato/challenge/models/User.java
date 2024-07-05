@@ -27,6 +27,9 @@ public class User {
   @NotBlank
   private Boolean isDeleted = false;
 
+  public User() {
+
+  }
 
   public User(String username, String password) {
     this.username = username;
@@ -35,6 +38,10 @@ public class User {
 
   public Long getId() {
     return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public String getUsername() {
