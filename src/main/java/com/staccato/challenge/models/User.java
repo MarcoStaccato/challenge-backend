@@ -4,8 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Setter
+@Getter
 @Table(name = "users",
     uniqueConstraints = {
         @UniqueConstraint(columnNames = "username")
@@ -28,7 +32,6 @@ public class User {
   private Boolean isDeleted = false;
 
   public User() {
-
   }
 
   public User(String username, String password) {
@@ -36,36 +39,5 @@ public class User {
     this.password = password;
   }
 
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public Boolean getDeleted() {
-    return isDeleted;
-  }
-
-  public void setDeleted(Boolean deleted) {
-    isDeleted = deleted;
-  }
 }
 

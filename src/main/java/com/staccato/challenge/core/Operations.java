@@ -8,24 +8,24 @@ import java.io.IOException;
 
 public class Operations {
 
-  public static int addition(int num1, int num2) {
+  public static Double addition(Double num1, Double num2) {
     return num1 + num2;
   }
 
-  public static int substraction(int num1, int num2) {
+  public static Double substraction(Double num1, Double num2) {
     return num1 - num2;
   }
 
-  public static int multiplication(int num1, int num2) {
+  public static Double multiplication(Double num1, Double num2) {
     return num1 * num2;
   }
 
   //TODO: validate special cases
-  public static int division(int num1, int num2) {
+  public static Double division(Double num1, Double num2) {
     return num1/num2;
   }
 
-  public static double sqrt(int num1) {
+  public static Double sqrt(Double num1) {
     return Math.sqrt(num1);
   }
 

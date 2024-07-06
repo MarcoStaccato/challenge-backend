@@ -8,50 +8,50 @@ public class OperationsTest {
 
   @Test
   public void addition_Test() {
-    Assertions.assertEquals(3, Operations.addition(1, 2));
-    Assertions.assertEquals(0, Operations.addition(0, 0));
-    Assertions.assertEquals(0, Operations.addition(1, -1));
-    Assertions.assertEquals(-2, Operations.addition(-1, -1));
+    Assertions.assertEquals(3d, Operations.addition(1d, 2d));
+    Assertions.assertEquals(0d, Operations.addition(0d, 0d));
+    Assertions.assertEquals(0d, Operations.addition(1d, -1d));
+    Assertions.assertEquals(-2d, Operations.addition(-1d, -1d));
   }
 
   @Test
   public void substraction_Test() {
-    Assertions.assertEquals(1, Operations.substraction(2, 1));
-    Assertions.assertEquals(0, Operations.substraction(2, 2));
-    Assertions.assertEquals(2, Operations.substraction(1, -1));
-    Assertions.assertEquals(0, Operations.substraction(-1, -1));
+    Assertions.assertEquals(1, Operations.substraction(2d, 1d));
+    Assertions.assertEquals(0, Operations.substraction(2d, 2d));
+    Assertions.assertEquals(2, Operations.substraction(1d, -1d));
+    Assertions.assertEquals(0, Operations.substraction(-1d, -1d));
   }
 
   @Test
   public void multiplication_Test() {
-    Assertions.assertEquals(2, Operations.multiplication(2, 1));
-    Assertions.assertEquals(0, Operations.multiplication(0, 0));
-    Assertions.assertEquals(-1, Operations.multiplication(1, -1));
-    Assertions.assertEquals(1, Operations.multiplication(-1, -1));
+    Assertions.assertEquals(2, Operations.multiplication(2d, 1d));
+    Assertions.assertEquals(0, Operations.multiplication(0d, 0d));
+    Assertions.assertEquals(-1, Operations.multiplication(1d, -1d));
+    Assertions.assertEquals(1, Operations.multiplication(-1d, -1d));
   }
 
   @Test
   public void division_Test() {
-    Assertions.assertEquals(1, Operations.division(2, 2));
-    Assertions.assertEquals(0, Operations.division(1, 2));
-    Assertions.assertEquals(-1, Operations.division(1, -1));
-    Assertions.assertEquals(1, Operations.division(-1, -1));
+    Assertions.assertEquals(1, Operations.division(2d, 2d));
+    Assertions.assertEquals(0, Operations.division(1d, 2d));
+    Assertions.assertEquals(-1, Operations.division(1d, -1d));
+    Assertions.assertEquals(1, Operations.division(-1d, -1d));
   }
 
   @Test
   public void division_zero_by_zero_Test() {
-    Assertions.assertThrows(ArithmeticException.class, () -> Operations.division(0, 0));
+    Assertions.assertThrows(ArithmeticException.class, () -> Operations.division(0d, 0d));
   }
 
   @Test
   public void division_by_zero_Test() {
-    Assertions.assertThrows(ArithmeticException.class, () -> Operations.division(1, 0));
+    Assertions.assertThrows(ArithmeticException.class, () -> Operations.division(1d, 0d));
   }
 
   @Test
   public void sqrt_Test() {
-    Assertions.assertEquals(10, Operations.sqrt(100));
-    Assertions.assertEquals(0, Operations.sqrt(0));
+    Assertions.assertEquals(10, Operations.sqrt(100d));
+    Assertions.assertEquals(0, Operations.sqrt(0d));
 
   }
 
