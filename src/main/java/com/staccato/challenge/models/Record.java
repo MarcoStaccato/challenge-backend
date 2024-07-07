@@ -44,5 +44,14 @@ public class Record {
   @NotBlank
   private Boolean isDeleted = false;
 
+  public Record(Long operationId, Long userId, Long amount, Long userBalance, String operationResponse, Instant date) {
+    this.operationId = operationId;
+    this.userId = userId;
+    this.amount = amount;
+    this.userBalance = userBalance;
+    this.operationResponse = operationResponse;
+    this.date = date;
+  }
+
 }
 

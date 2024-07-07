@@ -2,35 +2,52 @@ package com.staccato.challenge.service;
 
 import com.staccato.challenge.core.Operations;
 import com.staccato.challenge.core.OperationsEnum;
-import com.staccato.challenge.models.User;
+import com.staccato.challenge.models.Operation;
+import com.staccato.challenge.models.Record;
 import com.staccato.challenge.payload.ComputeRequest;
+import com.staccato.challenge.repository.OperationRepository;
 import com.staccato.challenge.repository.RecordRepository;
-import com.staccato.challenge.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class ComputeService {
 
   private final RecordRepository recordRepository;
-  private final UserRepository userRepository;
+  private final OperationRepository operationRepository;
 
 
-  public boolean isBalanceAvailable(String username) {
-    Optional<User> user =  userRepository.findByUsername(username);
+  private final String NOT_ENOUGH_BALANCE = "YOU DON'T HAVE ENOUGH BALANCE TO RUN THIS OPERATION";
 
-    if(user.isEmpty()) {
-      throw new IllegalArgumentException("User does not exists");
+  public String runOperation(String username, ComputeRequest request) {
+
+    //check for balance
+    Record latestRecord = recordRepository.findLatestRecord(username);
+    Optional<Operation> optionalOperation = operationRepository.findByType(request.getOperation());
+
+    if(optionalOperation.isEmpty()
+        || latestRecord == null
+        || (latestRecord.getUserBalance() - optionalOperation.get().getCost()) < 0) {
+      return NOT_ENOUGH_BALANCE;
     }
 
-    recordRepository.findById(user.get().getId());
+    String result = compute(request);
 
-    return false;
+    Operation currentOp = optionalOperation.get();
+    Long newBalance = latestRecord.getUserBalance() - currentOp.getCost();
+
+    Record record = new Record(currentOp.getId(), latestRecord.getUserId(), currentOp.getCost(), newBalance, result, Instant.now());
+
+    recordRepository.save(record);
+
+    return result;
   }
-
 
   public String compute(ComputeRequest request) {
 

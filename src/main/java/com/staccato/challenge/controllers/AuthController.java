@@ -56,7 +56,7 @@ public class AuthController {
         .body(new LoginResponse(loginRequest.getUsername()));
   }
 
-  //Used to initialize local users
+//  Used to initialize local users
 //  @PostMapping("/signup")
 //  public ResponseEntity<?> createUser(@Valid @RequestBody LoginRequest loginRequest) {
 //
@@ -65,7 +65,7 @@ public class AuthController {
 //    user.setPassword(encoder.encode(loginRequest.getPassword()));
 //    User savedUser = userRepository.save(user);
 //
-//    Record rec = new Record(1L, 1L, savedUser.getId(), 0L, 20L, "SUCCESS", Instant.now(), false);
+//    Record rec = new Record(1L, savedUser.getId(), 0L, 20L, "SUCCESS", Instant.now());
 //    recordRepository.save(rec);
 //
 //    return ResponseEntity.ok().body(new LoginResponse(loginRequest.getUsername()));
