@@ -27,8 +27,10 @@ public class JwtManager {
   @Value("${challenge.app.jwtCookieName}")
   private String jwtCookie;
 
-  public ResponseCookie generateJwtCookie(String username) {
-    String jwt = generateToken(username);
+  private final String USER_ID = "USER_ID";
+
+  public ResponseCookie generateJwtCookie(String username, Long userId) {
+    String jwt = generateToken(username, userId);
     ResponseCookie cookie = ResponseCookie
         .from(jwtCookie, jwt)
         .path("/api")
@@ -42,9 +44,10 @@ public class JwtManager {
     return ResponseCookie.from(jwtCookie, null).path("/api").build();
   }
 
-  public String generateToken(String username) {
+  public String generateToken(String username, Long userId) {
     return Jwts.builder()
         .subject(username)
+        .claim(USER_ID, userId)
         .issuedAt(new Date())
         .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
         .signWith(key())
@@ -77,5 +80,10 @@ public class JwtManager {
   public String getUserName(String token) {
     return Jwts.parser().setSigningKey(key()).build()
         .parseClaimsJws(token).getBody().getSubject();
+  }
+
+  public Integer getUserId(String token) {
+    return (Integer) Jwts.parser().setSigningKey(key()).build()
+        .parseClaimsJws(token).getPayload().get(USER_ID);
   }
 }

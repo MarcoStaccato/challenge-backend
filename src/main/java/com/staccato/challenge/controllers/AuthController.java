@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.util.Optional;
 
 
 //@CrossOrigin(origins = "*", maxAge = 3600)
@@ -50,26 +51,27 @@ public class AuthController {
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-    ResponseCookie jwtCookie = jwtManager.generateJwtCookie(loginRequest.getUsername());
+    Optional<User> user = userRepository.findByUsername(loginRequest.getUsername());
+    ResponseCookie jwtCookie = jwtManager.generateJwtCookie(loginRequest.getUsername(), user.get().getId());
 
     return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
         .body(new LoginResponse(loginRequest.getUsername()));
   }
 
 //  Used to initialize local users
-//  @PostMapping("/signup")
-//  public ResponseEntity<?> createUser(@Valid @RequestBody LoginRequest loginRequest) {
-//
-//    User user = new User();
-//    user.setUsername(loginRequest.getUsername());
-//    user.setPassword(encoder.encode(loginRequest.getPassword()));
-//    User savedUser = userRepository.save(user);
-//
-//    Record rec = new Record(1L, savedUser.getId(), 0L, 20L, "SUCCESS", Instant.now());
-//    recordRepository.save(rec);
-//
-//    return ResponseEntity.ok().body(new LoginResponse(loginRequest.getUsername()));
-//  }
+  @PostMapping("/signup")
+  public ResponseEntity<?> createUser(@Valid @RequestBody LoginRequest loginRequest) {
+
+    User user = new User();
+    user.setUsername(loginRequest.getUsername());
+    user.setPassword(encoder.encode(loginRequest.getPassword()));
+    User savedUser = userRepository.save(user);
+
+    Record rec = new Record(1L, savedUser.getId(), 0L, 20L, "SUCCESS", Instant.now());
+    recordRepository.save(rec);
+
+    return ResponseEntity.ok().body(new LoginResponse(loginRequest.getUsername()));
+  }
 
 
   @PostMapping("/signout")

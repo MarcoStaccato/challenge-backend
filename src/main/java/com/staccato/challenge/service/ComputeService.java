@@ -9,10 +9,16 @@ import com.staccato.challenge.repository.OperationRepository;
 import com.staccato.challenge.repository.RecordRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +31,7 @@ public class ComputeService {
 
   private final String NOT_ENOUGH_BALANCE = "YOU DON'T HAVE ENOUGH BALANCE TO RUN THIS OPERATION";
 
-  public String runOperation(String username, ComputeRequest request) {
+  public String runOperation(Integer username, ComputeRequest request) {
 
     //check for balance
     Record latestRecord = recordRepository.findLatestRecord(username);
@@ -70,4 +76,17 @@ public class ComputeService {
     return result;
   }
 
+
+  public List<Record> getRecords(Integer userId, String field, int pageNumber, int pageSize, String sort) {
+    Pageable sortedPage;
+
+    if("desc".equalsIgnoreCase(sort)){
+      sortedPage = PageRequest.of(pageNumber, pageSize, Sort.by(field).descending());
+    } else {
+      sortedPage = PageRequest.of(pageNumber, pageSize, Sort.by(field).ascending());
+    }
+
+    Page<Record> recordPage = recordRepository.findRecordsByUserId(userId, sortedPage);
+    return recordPage.get().collect(Collectors.toList());
+  }
 }
