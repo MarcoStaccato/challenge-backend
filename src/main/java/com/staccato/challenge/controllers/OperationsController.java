@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//enable for local development
+//@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600, allowCredentials = "true", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1/operations")
 public class OperationsController {
@@ -35,10 +37,14 @@ public class OperationsController {
 
   @GetMapping("/records")
   @PreAuthorize("hasRole('USER')")
-  public List<Record> getRecords(@CookieValue("challengeAuth") String jwtCookie) {
+  public List<Record> getRecords(@CookieValue("challengeAuth") String jwtCookie,
+                                 @RequestParam String field,
+                                 @RequestParam Integer pageNumber,
+                                 @RequestParam Integer pageSize,
+                                 @RequestParam String sorting) {
 
     Integer userId = jwtManager.getUserId(jwtCookie);
-    List<Record> records = computeService.getRecords(userId, "date", 0, 5, "desc");
+    List<Record> records = computeService.getRecords(userId, field, pageNumber, pageSize, sorting);
 
     return records;
   }
