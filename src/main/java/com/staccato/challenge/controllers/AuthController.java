@@ -10,6 +10,8 @@ import com.staccato.challenge.repository.UserRepository;
 import com.staccato.challenge.security.jwt.JwtManager;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ import java.time.Instant;
 import java.util.Optional;
 
 
-//@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*", exposedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
@@ -44,6 +46,9 @@ public class AuthController {
   @Autowired
   RecordRepository recordRepository;
 
+  @Value("${challenge.app.jwtCookieName}")
+  private String jwtTokenName;
+
   @PostMapping("/login")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
     Authentication authentication = authenticationManager
@@ -54,12 +59,15 @@ public class AuthController {
     Optional<User> user = userRepository.findByUsername(loginRequest.getUsername());
     ResponseCookie jwtCookie = jwtManager.generateJwtCookie(loginRequest.getUsername(), user.get().getId());
 
-    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+    return ResponseEntity.ok()
+        .header(jwtTokenName, jwtCookie.getValue())
+        .header(HttpHeaders.SET_COOKIE, jwtCookie.toString()) //for api testing
         .body(new LoginResponse(loginRequest.getUsername()));
   }
 
 //  Used to initialize local users
   @PostMapping("/signup")
+  @Profile("local")
   public ResponseEntity<?> createUser(@Valid @RequestBody LoginRequest loginRequest) {
 
     User user = new User();

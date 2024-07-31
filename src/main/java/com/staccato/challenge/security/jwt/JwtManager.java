@@ -25,23 +25,27 @@ public class JwtManager {
   private int jwtExpirationMs;
 
   @Value("${challenge.app.jwtCookieName}")
-  private String jwtCookie;
+  private String jwtTokenName;
 
   private final String USER_ID = "USER_ID";
 
   public ResponseCookie generateJwtCookie(String username, Long userId) {
     String jwt = generateToken(username, userId);
     ResponseCookie cookie = ResponseCookie
-        .from(jwtCookie, jwt)
-        .path("/api")
+        .from(jwtTokenName, jwt)
+        .domain("elpalomito.io")
+        .path("/")
         .maxAge(24 * 60 * 60)
-        .httpOnly(true)
+//        .httpOnly(true)
+        .secure(true)
+        .sameSite("None")
+
         .build();
     return cookie;
   }
 
   public ResponseCookie generateEmptyCookie() {
-    return ResponseCookie.from(jwtCookie, null).path("/api").build();
+    return ResponseCookie.from(jwtTokenName, null).path("/api").build();
   }
 
   public String generateToken(String username, Long userId) {
@@ -69,12 +73,8 @@ public class JwtManager {
   }
 
   public String getJwt(HttpServletRequest request) {
-    Cookie cookie = WebUtils.getCookie(request, jwtCookie);
-    if (cookie != null) {
-      return cookie.getValue();
-    } else {
-      return null;
-    }
+    String token = request.getHeader(jwtTokenName);
+    return token;
   }
 
   public String getUserName(String token) {

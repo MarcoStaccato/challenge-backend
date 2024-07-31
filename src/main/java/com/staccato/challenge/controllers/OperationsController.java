@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 //enable for local development
-//@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600, allowCredentials = "true", allowedHeaders = "*")
+//@CrossOrigin(origins = {"http://localhost.elpalomito.io:8081"}, maxAge = 3600, allowedHeaders = "*", exposedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1/operations")
 public class OperationsController {
@@ -27,9 +27,9 @@ public class OperationsController {
   @PostMapping("/compute")
   @PreAuthorize("hasRole('USER')")
   public String compute(@Valid @RequestBody ComputeRequest computeRequest,
-                        @CookieValue("challengeAuth") String jwtCookie) {
+                        @RequestHeader(value="Authorization") String jwtToken) {
 
-    Integer userId = jwtManager.getUserId(jwtCookie);
+    Integer userId = jwtManager.getUserId(jwtToken);
     String result = computeService.runOperation(userId, computeRequest);
 
     return result;
@@ -37,13 +37,13 @@ public class OperationsController {
 
   @GetMapping("/records")
   @PreAuthorize("hasRole('USER')")
-  public List<Record> getRecords(@CookieValue("challengeAuth") String jwtCookie,
+  public List<Record> getRecords(@RequestHeader(value="Authorization") String jwtToken,
                                  @RequestParam String field,
                                  @RequestParam Integer pageNumber,
                                  @RequestParam Integer pageSize,
                                  @RequestParam String sorting) {
 
-    Integer userId = jwtManager.getUserId(jwtCookie);
+    Integer userId = jwtManager.getUserId(jwtToken);
     List<Record> records = computeService.getRecords(userId, field, pageNumber, pageSize, sorting);
 
     return records;
